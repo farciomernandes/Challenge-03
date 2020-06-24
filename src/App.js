@@ -25,12 +25,10 @@ export default function App() {
   },[])
 
   async function handleLikeRepository(id) {
-          const response = await api.post(`repositories/${id}/like`);
-          const repositoryIndex = repositories.findIndex(repository => repository.id === id);
-
-          repositories[repositoryIndex] = response.data;
-      
-          setRepositories([...repositories]);
+    const { data } = await api.post(`repositories/${id}/like`)
+    setRepositories(
+      repositories.map(repository => repository.id === id ? data : repository)
+    )
         }
 
   return (
@@ -54,17 +52,17 @@ export default function App() {
        <View style={styles.likesContainer}>
          <Text
            style={styles.likeText}
-           testID={`repository-likes-1`}
-         >
-           {repository.likes}
+           testID={`repository-likes-${repository.id}`}
+           >
+             {repository.likes} curtidas
          </Text>
        </View>
 
        <TouchableOpacity
          style={styles.button}
          onPress={() => handleLikeRepository(repository.id)}
-         testID={`like-button-1`}
-       >
+         testID={`like-button-${repository.id}`}
+         >
          <Text style={styles.buttonText}>Curtir</Text>
        </TouchableOpacity>
      </View>
